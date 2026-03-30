@@ -38,3 +38,8 @@ INSERT INTO players (id, club_id, name, position, jersey_number, nationality, ag
 -- Borussia Dortmund
 (11, 6, 'Karim Adeyemi',     'Winger',           27, 'German',   23),
 (12, 6, 'Emre Can',          'Midfielder',        23, 'German',  30);
+
+-- Reset sequences so new inserts start after seeded data
+ALTER TABLE leagues ALTER COLUMN id RESTART WITH 4;
+ALTER TABLE clubs ALTER COLUMN id RESTART WITH 7;
+ALTER TABLE players ALTER COLUMN id RESTART WITH 13;
