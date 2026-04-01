@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Maven build output
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -17,3 +18,42 @@ spring.log
 # OS
 .DS_Store
 Thumbs.db
+=======
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### API Keys — never commit secrets ###
+application-local.properties
+src/main/resources/application.properties
+>>>>>>> 7ff9eeb18fbc09ba2866d928b395feaccd88e26e
