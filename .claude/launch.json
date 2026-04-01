@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Soccer App (Spring Boot)",
+      "runtimeExecutable": "/Users/james/Projects/OnesToManys/soccerapp/mvnw",
+      "runtimeArgs": ["-f", "/Users/james/Projects/OnesToManys/soccerapp/pom.xml", "spring-boot:run"],
+      "port": 8080
+    }
+  ]
+}
