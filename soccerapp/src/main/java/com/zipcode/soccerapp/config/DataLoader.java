@@ -25,7 +25,7 @@ public class DataLoader implements CommandLineRunner {
     private static final int[] COMPETITION_IDS = {2021, 2014, 2002}; // PL, La Liga, Bundesliga
 
     private static final int CLUBS_PER_LEAGUE = 18;
-    private static final int PLAYERS_PER_CLUB = 11;
+    private static final int PLAYERS_PER_CLUB = 30;
 
     private final FootballDataService footballDataService;
     private final LeagueRepository leagueRepository;
