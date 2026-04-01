@@ -3,148 +3,317 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Soccer App</title>
+  <title>⚽ Soccer App</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ── Stadium Background ──────────────────────────────────────────────── */
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #1a1a2e;
-      color: #eee;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
       min-height: 100vh;
+      background:
+        linear-gradient(rgba(0,0,0,0.72), rgba(0,10,5,0.85)),
+        url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1920&q=80')
+        center / cover no-repeat fixed;
+      color: #f0f0f0;
+      overflow: hidden;
     }
 
+    /* Pitch-stripe overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        transparent 48px,
+        rgba(255,255,255,0.015) 48px,
+        rgba(255,255,255,0.015) 96px
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Header ──────────────────────────────────────────────────────────── */
     header {
-      background: #16213e;
-      border-bottom: 3px solid #2d6a4f;
-      padding: 16px 24px;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .logo {
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    header h1 {
-      font-size: 1.4rem;
+    .logo-icon {
+      font-size: 2rem;
+      filter: drop-shadow(0 0 8px rgba(82,183,136,0.8));
+    }
+
+    .logo-text h1 {
+      font-size: 1.3rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .logo-text p {
+      font-size: 0.65rem;
       color: #52b788;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 20px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #52b788;
+    }
+
+    .stat-label {
+      font-size: 0.6rem;
+      color: #888;
+      text-transform: uppercase;
       letter-spacing: 1px;
     }
 
-    header span { font-size: 1.6rem; }
-
-    .columns {
-      display: flex;
-      gap: 0;
-      height: calc(100vh - 60px);
+    .api-btn {
+      background: rgba(82,183,136,0.15);
+      border: 1px solid rgba(82,183,136,0.4);
+      color: #52b788;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+      font-family: inherit;
     }
 
+    .api-btn:hover {
+      background: rgba(82,183,136,0.3);
+      border-color: #52b788;
+    }
+
+    /* ── Main Layout ─────────────────────────────────────────────────────── */
+    .main {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      height: calc(100vh - 62px);
+    }
+
+    /* ── Columns ─────────────────────────────────────────────────────────── */
     .column {
       flex: 1;
       display: flex;
       flex-direction: column;
-      border-right: 1px solid #2d3561;
+      border-right: 1px solid rgba(255,255,255,0.06);
       overflow: hidden;
     }
 
     .column:last-child { border-right: none; }
 
-    .column-header {
-      background: #16213e;
-      padding: 12px 16px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: #52b788;
-      border-bottom: 1px solid #2d3561;
+    .col-header {
+      padding: 14px 20px 10px;
+      background: rgba(0,0,0,0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(8px);
     }
 
-    .column-body {
+    .col-header h2 {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #52b788;
+    }
+
+    .col-header p {
+      font-size: 0.72rem;
+      color: #555;
+      margin-top: 2px;
+    }
+
+    .col-body {
       flex: 1;
       overflow-y: auto;
-      padding: 8px;
+      padding: 12px;
+      scrollbar-width: thin;
+      scrollbar-color: #2d6a4f transparent;
     }
 
-    .column-body::-webkit-scrollbar { width: 4px; }
-    .column-body::-webkit-scrollbar-track { background: #1a1a2e; }
-    .column-body::-webkit-scrollbar-thumb { background: #2d6a4f; border-radius: 2px; }
+    .col-body::-webkit-scrollbar { width: 3px; }
+    .col-body::-webkit-scrollbar-thumb { background: #2d6a4f; border-radius: 2px; }
 
+    /* ── Cards ───────────────────────────────────────────────────────────── */
     .card {
-      background: #16213e;
-      border: 1px solid #2d3561;
-      border-radius: 8px;
-      padding: 12px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 14px 16px;
       margin-bottom: 8px;
       cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
+      transition: all 0.18s;
+      backdrop-filter: blur(6px);
     }
 
     .card:hover {
-      background: #1e3a5f;
-      border-color: #52b788;
+      background: rgba(82,183,136,0.1);
+      border-color: rgba(82,183,136,0.3);
+      transform: translateX(3px);
     }
 
     .card.active {
-      background: #1b4332;
+      background: rgba(82,183,136,0.15);
       border-color: #52b788;
+      border-left: 3px solid #52b788;
     }
 
     .card-title {
       font-size: 0.95rem;
       font-weight: 600;
-      color: #d8f3dc;
-      margin-bottom: 4px;
+      color: #fff;
+      margin-bottom: 6px;
     }
 
-    .card-subtitle {
-      font-size: 0.78rem;
+    .card-sub {
+      font-size: 0.72rem;
       color: #74c69d;
+      margin-bottom: 8px;
     }
 
-    .card-meta {
-      margin-top: 6px;
+    .tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 5px;
     }
 
     .tag {
-      background: #0d3b2e;
-      color: #74c69d;
-      font-size: 0.7rem;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #aaa;
+      font-size: 0.68rem;
       padding: 2px 8px;
-      border-radius: 12px;
-      border: 1px solid #2d6a4f;
+      border-radius: 20px;
+      white-space: nowrap;
     }
 
-    .empty-state {
+    .tag.green {
+      background: rgba(82,183,136,0.12);
+      border-color: rgba(82,183,136,0.25);
+      color: #74c69d;
+    }
+
+    /* ── League card ─────────────────────────────────────────────────────── */
+    .league-flag {
+      font-size: 1.4rem;
+      float: right;
+      margin-top: -2px;
+    }
+
+    /* ── Player card ─────────────────────────────────────────────────────── */
+    .player-card { cursor: default; }
+    .player-card:hover { transform: none; }
+
+    .player-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .jersey {
+      min-width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #1b4332, #2d6a4f);
+      border: 1px solid #52b788;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #d8f3dc;
+      flex-shrink: 0;
+    }
+
+    .position-badge {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .pos-GK  { background: rgba(255,200,0,0.2);  color: #ffd60a; border: 1px solid rgba(255,200,0,0.3); }
+    .pos-DEF { background: rgba(0,100,255,0.2);  color: #74b9ff; border: 1px solid rgba(0,100,255,0.3); }
+    .pos-MID { background: rgba(0,200,100,0.2);  color: #55efc4; border: 1px solid rgba(0,200,100,0.3); }
+    .pos-FWD { background: rgba(255,80,0,0.2);   color: #fd9644; border: 1px solid rgba(255,80,0,0.3); }
+    .pos-DEF.left-back, .pos-DEF { }
+
+    /* ── Empty / Loading states ──────────────────────────────────────────── */
+    .empty {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100%;
+      gap: 10px;
       color: #444;
-      font-size: 0.85rem;
-      gap: 8px;
-      padding: 24px;
+      font-size: 0.82rem;
       text-align: center;
+      padding: 32px 16px;
     }
 
-    .empty-state .icon { font-size: 2rem; }
+    .empty .icon { font-size: 2.5rem; opacity: 0.4; }
 
     .loading {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 80px;
+      gap: 10px;
+      padding: 32px;
       color: #52b788;
-      font-size: 0.85rem;
-      gap: 8px;
+      font-size: 0.82rem;
     }
 
     .spinner {
-      width: 16px;
-      height: 16px;
-      border: 2px solid #2d6a4f;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(82,183,136,0.2);
       border-top-color: #52b788;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
@@ -152,188 +321,429 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .jersey {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      background: #2d6a4f;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: #d8f3dc;
-      margin-right: 6px;
-      flex-shrink: 0;
+    /* ── API Drawer ──────────────────────────────────────────────────────── */
+    .drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 100;
+      backdrop-filter: blur(4px);
     }
 
-    .player-name-row {
+    .drawer-overlay.open { display: block; }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -520px;
+      width: 480px;
+      height: 100vh;
+      background: rgba(10,20,15,0.97);
+      border-left: 1px solid rgba(82,183,136,0.2);
+      z-index: 101;
+      transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(20px);
+    }
+
+    .drawer.open { right: 0; }
+
+    .drawer-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
       display: flex;
       align-items: center;
+      justify-content: space-between;
     }
+
+    .drawer-header h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #52b788;
+    }
+
+    .drawer-close {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .drawer-close:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 24px;
+    }
+
+    .endpoint-group {
+      margin-bottom: 24px;
+    }
+
+    .endpoint-group h4 {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #52b788;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(82,183,136,0.15);
+    }
+
+    .endpoint-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      transition: background 0.15s;
+    }
+
+    .endpoint-row:hover { background: rgba(255,255,255,0.03); }
+
+    .method {
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 3px 7px;
+      border-radius: 5px;
+      min-width: 46px;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .GET    { background: rgba(0,200,100,0.15); color: #00e676; border: 1px solid rgba(0,200,100,0.3); }
+    .POST   { background: rgba(0,100,255,0.15); color: #74b9ff; border: 1px solid rgba(0,100,255,0.3); }
+    .PUT    { background: rgba(255,165,0,0.15); color: #fd9644; border: 1px solid rgba(255,165,0,0.3); }
+    .DELETE { background: rgba(255,50,50,0.15); color: #ff7675; border: 1px solid rgba(255,50,50,0.3); }
+
+    .endpoint-url {
+      font-size: 0.72rem;
+      color: #ccc;
+      font-family: 'Courier New', monospace;
+    }
+
+    .endpoint-url span { color: #52b788; }
   </style>
 </head>
 <body>
 
+<!-- ── Header ────────────────────────────────────────────────────────────── -->
 <header>
-  <span>⚽</span>
-  <h1>Soccer App</h1>
+  <div class="logo">
+    <div class="logo-icon">⚽</div>
+    <div class="logo-text">
+      <h1>Soccer App</h1>
+      <p>League · Club · Player Explorer</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-num" id="stat-leagues">—</div>
+        <div class="stat-label">Leagues</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="stat-clubs">—</div>
+        <div class="stat-label">Clubs</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="stat-players">—</div>
+        <div class="stat-label">Players</div>
+      </div>
+    </div>
+    <button class="api-btn" onclick="openDrawer()">⚙ API Docs</button>
+  </div>
 </header>
 
-<div class="columns">
+<!-- ── Main Columns ───────────────────────────────────────────────────────── -->
+<div class="main">
 
-  <!-- Leagues -->
   <div class="column">
-    <div class="column-header">Leagues</div>
-    <div class="column-body" id="leagues-list">
-      <div class="loading"><div class="spinner"></div> Loading...</div>
+    <div class="col-header">
+      <h2>Leagues</h2>
+      <p>Select a league to explore</p>
+    </div>
+    <div class="col-body" id="leagues-list">
+      <div class="loading"><div class="spinner"></div>Loading leagues...</div>
     </div>
   </div>
 
-  <!-- Clubs -->
   <div class="column">
-    <div class="column-header">Clubs</div>
-    <div class="column-body" id="clubs-list">
-      <div class="empty-state">
-        <div class="icon">🏟️</div>
-        <div>Select a league to see its clubs</div>
-      </div>
+    <div class="col-header">
+      <h2>Clubs</h2>
+      <p id="clubs-sub">Choose a league first</p>
+    </div>
+    <div class="col-body" id="clubs-list">
+      <div class="empty"><div class="icon">🏟️</div>Select a league to see its clubs</div>
     </div>
   </div>
 
-  <!-- Players -->
   <div class="column">
-    <div class="column-header">Players</div>
-    <div class="column-body" id="players-list">
-      <div class="empty-state">
-        <div class="icon">👟</div>
-        <div>Select a club to see its players</div>
-      </div>
+    <div class="col-header">
+      <h2>Players</h2>
+      <p id="players-sub">Choose a club first</p>
+    </div>
+    <div class="col-body" id="players-list">
+      <div class="empty"><div class="icon">👟</div>Select a club to see its squad</div>
     </div>
   </div>
 
 </div>
 
-<script>
-  const BASE = '';  // same origin — served by Spring Boot at localhost:8080
+<!-- ── API Docs Drawer ────────────────────────────────────────────────────── -->
+<div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <h3>⚡ API Endpoints</h3>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
 
+    <div class="endpoint-group">
+      <h4>🌍 Leagues</h4>
+      <div class="endpoint-row"><span class="method GET">GET</span><span class="endpoint-url">/api/leagues</span></div>
+      <div class="endpoint-row"><span class="method GET">GET</span><span class="endpoint-url">/api/leagues/<span>{id}</span></span></div>
+      <div class="endpoint-row"><span class="method POST">POST</span><span class="endpoint-url">/api/leagues</span></div>
+      <div class="endpoint-row"><span class="method PUT">PUT</span><span class="endpoint-url">/api/leagues/<span>{id}</span></span></div>
+      <div class="endpoint-row"><span class="method DELETE">DELETE</span><span class="endpoint-url">/api/leagues/<span>{id}</span></span></div>
+    </div>
+
+    <div class="endpoint-group">
+      <h4>🏟️ Clubs</h4>
+      <div class="endpoint-row"><span class="method GET">GET</span><span class="endpoint-url">/api/leagues/<span>{leagueId}</span>/clubs</span></div>
+      <div class="endpoint-row"><span class="method GET">GET</span><span class="endpoint-url">/api/leagues/<span>{leagueId}</span>/clubs/<span>{id}</span></span></div>
+      <div class="endpoint-row"><span class="method POST">POST</span><span class="endpoint-url">/api/leagues/<span>{leagueId}</span>/clubs</span></div>
+      <div class="endpoint-row"><span class="method PUT">PUT</span><span class="endpoint-url">/api/leagues/<span>{leagueId}</span>/clubs/<span>{id}</span></span></div>
+      <div class="endpoint-row"><span class="method DELETE">DELETE</span><span class="endpoint-url">/api/leagues/<span>{leagueId}</span>/clubs/<span>{id}</span></span></div>
+    </div>
+
+    <div class="endpoint-group">
+      <h4>👟 Players</h4>
+      <div class="endpoint-row"><span class="method GET">GET</span><span class="endpoint-url">/api/leagues/<span>{leagueId}</span>/clubs/<span>{clubId}</span>/players</span></div>
+      <div class="endpoint-row"><span class="method GET">GET</span><span class="endpoint-url">/api/leagues/<span>{leagueId}</span>/clubs/<span>{clubId}</span>/players/<span>{id}</span></span></div>
+      <div class="endpoint-row"><span class="method POST">POST</span><span class="endpoint-url">/api/leagues/<span>{leagueId}</span>/clubs/<span>{clubId}</span>/players</span></div>
+      <div class="endpoint-row"><span class="method PUT">PUT</span><span class="endpoint-url">/api/leagues/<span>{leagueId}</span>/clubs/<span>{clubId}</span>/players/<span>{id}</span></span></div>
+      <div class="endpoint-row"><span class="method DELETE">DELETE</span><span class="endpoint-url">/api/leagues/<span>{leagueId}</span>/clubs/<span>{clubId}</span>/players/<span>{id}</span></span></div>
+    </div>
+
+    <div class="endpoint-group">
+      <h4>💾 Data Export / Import</h4>
+      <div class="endpoint-row"><span class="method GET">GET</span><span class="endpoint-url">/api/export/json</span></div>
+      <div class="endpoint-row"><span class="method GET">GET</span><span class="endpoint-url">/api/export/sql</span></div>
+      <div class="endpoint-row"><span class="method POST">POST</span><span class="endpoint-url">/api/import/json</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Script ─────────────────────────────────────────────────────────────── -->
+<script>
   let selectedLeagueId = null;
   let selectedClubId   = null;
+  let allLeagues       = [];
+  let allClubs         = [];
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
+  // ── Helpers ───────────────────────────────────────────────────────────────
 
   function loading() {
-    return `<div class="loading"><div class="spinner"></div> Loading...</div>`;
+    return `<div class="loading"><div class="spinner"></div>Loading...</div>`;
   }
 
-  function orDash(val) {
-    return val != null ? val : '—';
+  function posClass(position) {
+    if (!position) return '';
+    const p = position.toLowerCase();
+    if (p.includes('goalkeeper') || p === 'gk') return 'pos-GK';
+    if (p.includes('back') || p.includes('defender') || p === 'cb' || p === 'lb' || p === 'rb') return 'pos-DEF';
+    if (p.includes('mid') || p === 'cm' || p === 'dm' || p === 'am') return 'pos-MID';
+    if (p.includes('forward') || p.includes('wing') || p.includes('striker') || p === 'fw' || p === 'cf') return 'pos-FWD';
+    return 'pos-MID';
   }
 
-  // ── Leagues ────────────────────────────────────────────────────────────────
+  function posLabel(position) {
+    if (!position) return '';
+    const p = position.toLowerCase();
+    if (p.includes('goalkeeper')) return 'GK';
+    if (p.includes('centre-back') || p.includes('center-back')) return 'CB';
+    if (p.includes('left-back') || p.includes('left back')) return 'LB';
+    if (p.includes('right-back') || p.includes('right back')) return 'RB';
+    if (p.includes('defensive mid')) return 'DM';
+    if (p.includes('attacking mid')) return 'AM';
+    if (p.includes('midfield')) return 'MID';
+    if (p.includes('left wing') || p.includes('left winger')) return 'LW';
+    if (p.includes('right wing') || p.includes('right winger')) return 'RW';
+    if (p.includes('striker') || p.includes('centre-forward')) return 'ST';
+    if (p.includes('forward')) return 'FW';
+    if (p.includes('winger')) return 'W';
+    if (p.includes('back')) return 'DEF';
+    return position.slice(0, 3).toUpperCase();
+  }
+
+  function countryFlag(country) {
+    const flags = {
+      'england': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'spain': '🇪🇸', 'germany': '🇩🇪',
+      'france': '🇫🇷', 'italy': '🇮🇹', 'portugal': '🇵🇹',
+      'netherlands': '🇳🇱', 'brazil': '🇧🇷', 'argentina': '🇦🇷'
+    };
+    return flags[(country || '').toLowerCase()] || '🌍';
+  }
+
+  // ── Drawer ────────────────────────────────────────────────────────────────
+
+  function openDrawer() {
+    document.getElementById('drawer').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+  }
+
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  // ── Stats ─────────────────────────────────────────────────────────────────
+
+  async function updateStats() {
+    const leagues = await fetch('/api/leagues').then(r => r.json());
+    allLeagues = leagues;
+    document.getElementById('stat-leagues').textContent = leagues.length;
+
+    let totalClubs   = 0;
+    let totalPlayers = 0;
+
+    for (const league of leagues) {
+      const clubs = await fetch(`/api/leagues/${league.id}/clubs`).then(r => r.json());
+      totalClubs += clubs.length;
+      for (const club of clubs) {
+        const players = await fetch(`/api/leagues/${league.id}/clubs/${club.id}/players`).then(r => r.json());
+        totalPlayers += players.length;
+      }
+    }
+
+    document.getElementById('stat-clubs').textContent   = totalClubs;
+    document.getElementById('stat-players').textContent = totalPlayers;
+  }
+
+  // ── Leagues ───────────────────────────────────────────────────────────────
 
   async function loadLeagues() {
     const el = document.getElementById('leagues-list');
     el.innerHTML = loading();
 
-    const res  = await fetch(`${BASE}/api/leagues`);
-    const data = await res.json();
+    const leagues = await fetch('/api/leagues').then(r => r.json());
+    allLeagues = leagues;
+    document.getElementById('stat-leagues').textContent = leagues.length;
 
-    if (!data.length) {
-      el.innerHTML = `<div class="empty-state"><div class="icon">🌍</div><div>No leagues found</div></div>`;
+    if (!leagues.length) {
+      el.innerHTML = `<div class="empty"><div class="icon">🌍</div>No leagues found</div>`;
       return;
     }
 
-    el.innerHTML = data.map(league => `
-      <div class="card" id="league-${league.id}" onclick="selectLeague(${league.id})">
-        <div class="card-title">${league.name}</div>
-        <div class="card-subtitle">${orDash(league.country)}</div>
+    el.innerHTML = leagues.map(l => `
+      <div class="card" id="league-${l.id}" onclick="selectLeague(${l.id}, '${(l.name||'').replace(/'/g,"\\'")}')">
+        <span class="league-flag">${countryFlag(l.country)}</span>
+        <div class="card-title">${l.name}</div>
+        <div class="card-sub">${l.country || '—'}</div>
+        ${l.foundedYear ? `<div class="tags"><span class="tag">Est. ${l.foundedYear}</span></div>` : ''}
       </div>
     `).join('');
   }
 
-  async function selectLeague(leagueId) {
+  async function selectLeague(leagueId, leagueName) {
     selectedLeagueId = leagueId;
     selectedClubId   = null;
 
-    // highlight
     document.querySelectorAll('#leagues-list .card').forEach(c => c.classList.remove('active'));
     document.getElementById(`league-${leagueId}`)?.classList.add('active');
 
-    // reset players
-    document.getElementById('players-list').innerHTML = `
-      <div class="empty-state"><div class="icon">👟</div><div>Select a club to see its players</div></div>
-    `;
+    document.getElementById('clubs-sub').textContent = leagueName;
+    document.getElementById('players-sub').textContent = 'Choose a club first';
+    document.getElementById('players-list').innerHTML = `<div class="empty"><div class="icon">👟</div>Select a club to see its squad</div>`;
 
     await loadClubs(leagueId);
   }
 
-  // ── Clubs ──────────────────────────────────────────────────────────────────
+  // ── Clubs ─────────────────────────────────────────────────────────────────
 
   async function loadClubs(leagueId) {
     const el = document.getElementById('clubs-list');
     el.innerHTML = loading();
 
-    const res  = await fetch(`${BASE}/api/leagues/${leagueId}/clubs`);
-    const data = await res.json();
+    const clubs = await fetch(`/api/leagues/${leagueId}/clubs`).then(r => r.json());
+    allClubs = clubs;
+    document.getElementById('stat-clubs').textContent = clubs.length;
 
-    if (!data.length) {
-      el.innerHTML = `<div class="empty-state"><div class="icon">🏟️</div><div>No clubs in this league</div></div>`;
+    if (!clubs.length) {
+      el.innerHTML = `<div class="empty"><div class="icon">🏟️</div>No clubs in this league</div>`;
       return;
     }
 
-    el.innerHTML = data.map(club => `
-      <div class="card" id="club-${club.id}" onclick="selectClub(${club.id})">
-        <div class="card-title">${club.name}</div>
-        <div class="card-meta">
-          ${club.stadiumName   ? `<span class="tag">🏟 ${club.stadiumName}</span>` : ''}
-          ${club.coachName     ? `<span class="tag">👔 ${club.coachName}</span>` : ''}
-          ${club.foundedYear   ? `<span class="tag">📅 ${club.foundedYear}</span>` : ''}
+    el.innerHTML = clubs.map(c => `
+      <div class="card" id="club-${c.id}" onclick="selectClub(${c.id}, '${(c.name||'').replace(/'/g,"\\'")}')">
+        <div class="card-title">${c.name}</div>
+        <div class="tags">
+          ${c.stadiumName ? `<span class="tag green">🏟 ${c.stadiumName}</span>` : ''}
+          ${c.coachName   ? `<span class="tag">👔 ${c.coachName}</span>` : ''}
+          ${c.foundedYear ? `<span class="tag">📅 ${c.foundedYear}</span>` : ''}
+          ${c.city        ? `<span class="tag">📍 ${c.city}</span>` : ''}
         </div>
       </div>
     `).join('');
   }
 
-  async function selectClub(clubId) {
+  async function selectClub(clubId, clubName) {
     selectedClubId = clubId;
 
-    // highlight
     document.querySelectorAll('#clubs-list .card').forEach(c => c.classList.remove('active'));
     document.getElementById(`club-${clubId}`)?.classList.add('active');
+
+    document.getElementById('players-sub').textContent = clubName;
 
     await loadPlayers(selectedLeagueId, clubId);
   }
 
-  // ── Players ────────────────────────────────────────────────────────────────
+  // ── Players ───────────────────────────────────────────────────────────────
 
   async function loadPlayers(leagueId, clubId) {
     const el = document.getElementById('players-list');
     el.innerHTML = loading();
 
-    const res  = await fetch(`${BASE}/api/leagues/${leagueId}/clubs/${clubId}/players`);
-    const data = await res.json();
+    const players = await fetch(`/api/leagues/${leagueId}/clubs/${clubId}/players`).then(r => r.json());
+    document.getElementById('stat-players').textContent = players.length;
 
-    if (!data.length) {
-      el.innerHTML = `<div class="empty-state"><div class="icon">👟</div><div>No players in this club</div></div>`;
+    if (!players.length) {
+      el.innerHTML = `<div class="empty"><div class="icon">👟</div>No players in this club</div>`;
       return;
     }
 
-    el.innerHTML = data.map(player => `
-      <div class="card">
-        <div class="player-name-row">
-          <span class="jersey">${player.jerseyNumber != null ? player.jerseyNumber : '?'}</span>
-          <div class="card-title">${player.name}</div>
+    el.innerHTML = players.map(p => `
+      <div class="card player-card">
+        <div class="player-top">
+          <div class="jersey">${p.jerseyNumber != null ? p.jerseyNumber : '?'}</div>
+          <div>
+            ${p.position ? `<div><span class="position-badge ${posClass(p.position)}">${posLabel(p.position)}</span></div>` : ''}
+            <div class="card-title" style="margin-bottom:0">${p.name}</div>
+          </div>
         </div>
-        <div class="card-meta">
-          ${player.position    ? `<span class="tag">${player.position}</span>` : ''}
-          ${player.nationality ? `<span class="tag">🌍 ${player.nationality}</span>` : ''}
-          ${player.age         ? `<span class="tag">Age ${player.age}</span>` : ''}
+        <div class="tags">
+          ${p.nationality ? `<span class="tag green">🌍 ${p.nationality}</span>` : ''}
+          ${p.age         ? `<span class="tag">Age ${p.age}</span>` : ''}
         </div>
       </div>
     `).join('');
   }
 
-  // ── Init ───────────────────────────────────────────────────────────────────
+  // ── Init ──────────────────────────────────────────────────────────────────
 
   loadLeagues();
 </script>
