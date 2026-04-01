@@ -1,5 +1,12 @@
 package com.zipcode.soccerapp.config;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
 import com.zipcode.soccerapp.entity.Club;
 import com.zipcode.soccerapp.entity.League;
 import com.zipcode.soccerapp.entity.Player;
@@ -7,15 +14,9 @@ import com.zipcode.soccerapp.repository.ClubRepository;
 import com.zipcode.soccerapp.repository.LeagueRepository;
 import com.zipcode.soccerapp.repository.PlayerRepository;
 import com.zipcode.soccerapp.service.FootballDataService;
-import com.zipcode.soccerapp.service.FootballDataService.ApiTeam;
 import com.zipcode.soccerapp.service.FootballDataService.ApiPlayer;
+import com.zipcode.soccerapp.service.FootballDataService.ApiTeam;
 import com.zipcode.soccerapp.service.FootballDataService.ApiTeamsResponse;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -23,8 +24,8 @@ public class DataLoader implements CommandLineRunner {
     // Competition IDs on football-data.org
     private static final int[] COMPETITION_IDS = {2021, 2014, 2002}; // PL, La Liga, Bundesliga
 
-    private static final int CLUBS_PER_LEAGUE = 3;
-    private static final int PLAYERS_PER_CLUB = 5;
+    private static final int CLUBS_PER_LEAGUE = 18;
+    private static final int PLAYERS_PER_CLUB = 11;
 
     private final FootballDataService footballDataService;
     private final LeagueRepository leagueRepository;
