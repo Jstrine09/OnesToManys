@@ -6,6 +6,8 @@ import com.zipcode.soccerapp.entity.Player;
 import com.zipcode.soccerapp.repository.ClubRepository;
 import com.zipcode.soccerapp.repository.LeagueRepository;
 import com.zipcode.soccerapp.repository.PlayerRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,14 +34,14 @@ public class DataExportController {
 
     // ── Import DTOs ───────────────────────────────────────────────────────────
 
-    record PlayerImport(String name, String position, Integer jerseyNumber,
+    record PlayerImport(@NotBlank String name, String position, Integer jerseyNumber,
                         String nationality, Integer age) {}
 
-    record ClubImport(String name, String city, String stadiumName,
+    record ClubImport(@NotBlank String name, String city, String stadiumName,
                       Integer foundedYear, String coachName,
                       List<PlayerImport> players) {}
 
-    record LeagueImport(String name, String country, Integer foundedYear,
+    record LeagueImport(@NotBlank String name, @NotBlank String country, Integer foundedYear,
                         String commissioner, List<ClubImport> clubs) {}
 
     record ImportRequest(List<LeagueImport> leagues) {}
@@ -150,7 +152,7 @@ public class DataExportController {
 
     @PostMapping("/import/json")
     @Transactional
-    public ResponseEntity<String> importJson(@RequestBody ImportRequest request) {
+    public ResponseEntity<String> importJson(@Valid @RequestBody ImportRequest request) {
         // Delete in FK order (players first, then clubs, then leagues)
         playerRepository.deleteAll();
         clubRepository.deleteAll();

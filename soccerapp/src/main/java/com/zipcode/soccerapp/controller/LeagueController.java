@@ -1,5 +1,9 @@
 package com.zipcode.soccerapp.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -77,8 +81,11 @@ public class LeagueController {
 
     // ── Nested Club endpoints (/api/leagues/{leagueId}/clubs) ─────────────────
 
-    record ClubRequest(String name, String city, String stadiumName,
-                       Integer foundedYear, String coachName) {}
+    record ClubRequest(@NotBlank @Size(max = 100) String name,
+                       @Size(max = 150) String city,
+                       @Size(max = 150) String stadiumName,
+                       Integer foundedYear,
+                       @Size(max = 100) String coachName) {}
 
     // GET all clubs in a league
     @GetMapping("/{leagueId}/clubs")
@@ -104,7 +111,7 @@ public class LeagueController {
     // POST create a club under a league
     @PostMapping("/{leagueId}/clubs")
     public ResponseEntity<Club> createClubInLeague(@PathVariable Long leagueId,
-                                                   @RequestBody ClubRequest body) {
+                                                   @Valid @RequestBody ClubRequest body) {
         return leagueRepository.findById(leagueId)
                 .map(league -> {
                     Club club = new Club();
@@ -123,7 +130,7 @@ public class LeagueController {
     @PutMapping("/{leagueId}/clubs/{clubId}")
     public ResponseEntity<Club> updateClubInLeague(@PathVariable Long leagueId,
                                                    @PathVariable Long clubId,
-                                                   @RequestBody ClubRequest body) {
+                                                   @Valid @RequestBody ClubRequest body) {
         if (!clubRepository.existsByIdAndLeagueId(clubId, leagueId)) {
             return ResponseEntity.notFound().build();
         }

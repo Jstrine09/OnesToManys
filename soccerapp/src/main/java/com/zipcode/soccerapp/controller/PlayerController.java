@@ -3,6 +3,9 @@ package com.zipcode.soccerapp.controller;
 import com.zipcode.soccerapp.entity.Player;
 import com.zipcode.soccerapp.repository.ClubRepository;
 import com.zipcode.soccerapp.repository.PlayerRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +23,11 @@ public class PlayerController {
         this.clubRepository = clubRepository;
     }
 
-    record PlayerRequest(String name, String position, Integer jerseyNumber,
-                         String nationality, Integer age) {}
+    record PlayerRequest(@NotBlank @Size(max = 100) String name,
+                         @Size(max = 50) String position,
+                         Integer jerseyNumber,
+                         @Size(max = 100) String nationality,
+                         Integer age) {}
 
     // GET all players in a club
     @GetMapping
@@ -53,7 +59,7 @@ public class PlayerController {
     @PostMapping
     public ResponseEntity<Player> createPlayer(@PathVariable Long leagueId,
                                                @PathVariable Long clubId,
-                                               @RequestBody PlayerRequest body) {
+                                               @Valid @RequestBody PlayerRequest body) {
         if (!clubRepository.existsByIdAndLeagueId(clubId, leagueId)) {
             return ResponseEntity.notFound().build();
         }
@@ -76,7 +82,7 @@ public class PlayerController {
     public ResponseEntity<Player> updatePlayer(@PathVariable Long leagueId,
                                                @PathVariable Long clubId,
                                                @PathVariable Long playerId,
-                                               @RequestBody PlayerRequest body) {
+                                               @Valid @RequestBody PlayerRequest body) {
         if (!clubRepository.existsByIdAndLeagueId(clubId, leagueId)) {
             return ResponseEntity.notFound().build();
         }
