@@ -2,6 +2,13 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "Frontend (Vite)",
+      "runtimeExecutable": "/usr/local/bin/node",
+      "runtimeArgs": ["/Users/james/Projects/OnesToManys/frontend/node_modules/.bin/vite"],
+      "cwd": "/Users/james/Projects/OnesToManys/frontend",
+      "port": 5173
+    },
+    {
       "name": "Soccer App (Spring Boot)",
       "runtimeExecutable": "/Users/james/Projects/OnesToManys/soccerapp/mvnw",
       "runtimeArgs": ["-f", "/Users/james/Projects/OnesToManys/soccerapp/pom.xml", "spring-boot:run"],
